@@ -22,7 +22,7 @@ final class Router {
         navigation.popViewController(animated: true)
     }
     
-    private func pushCategoriesViewController() {
+    func pushCategoriesViewController() {
         let controller = CategoriesViewController(router: self)
         push(controller: controller)
     }
