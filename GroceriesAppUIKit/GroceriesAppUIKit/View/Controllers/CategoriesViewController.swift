@@ -10,7 +10,7 @@ import UIKit
 class CategoriesViewController: UIViewController {
     
     private let categoriesView = CategoriesView()
-    private let viewModel = CategoriesViewModel()
+    private var viewModel = CategoriesViewModel()
     var router: Router
     
     init(router: Router) {
@@ -33,6 +33,7 @@ class CategoriesViewController: UIViewController {
         view.addSubview(categoriesView)
         categoriesView.collectionView.delegate = self
         categoriesView.collectionView.dataSource = self
+        categoriesView.searchBar.delegate = self
     }
     
     private func layout() {
@@ -47,13 +48,13 @@ class CategoriesViewController: UIViewController {
 
 extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.categoriesList.count
+        return viewModel.filteredCategoriesList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCardCell", for: indexPath) as? CategoryCardCell else { return UICollectionViewCell() }
         
-        let item = viewModel.categoriesList[indexPath.row]
+        let item = viewModel.filteredCategoriesList[indexPath.row]
         cell.model = item
         
         return cell
@@ -63,6 +64,23 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
         return CGSize(width: 160, height: 180)
     }
     
+    // 셀 선택 시 `router.pushCategoryDetailViewController` 호출
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedModel = viewModel.filteredCategoriesList[indexPath.row]
+        router.pushCategoryDetailViewController(with: selectedModel) // 선택된 셀의 모델과 스타일을 전달
+    }
+}
+
+// SearchBar에서 텍스트가 변경될 때 호출되는 메서드
+extension CategoriesViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.filterCategories(with: searchText)
+        categoriesView.collectionView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 struct CategoryCardModel {

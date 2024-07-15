@@ -20,6 +20,7 @@
 		CE120F7F2C41069600FDD783 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE120F7E2C41069600FDD783 /* WelcomeView.swift */; };
 		CE120F812C41083E00FDD783 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE120F802C41083E00FDD783 /* CategoriesView.swift */; };
 		CE120F832C41127900FDD783 /* CategoriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE120F822C41127900FDD783 /* CategoriesViewModel.swift */; };
+		CE120F852C44B62200FDD783 /* CategoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE120F842C44B62200FDD783 /* CategoryDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		CE120F7E2C41069600FDD783 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		CE120F802C41083E00FDD783 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		CE120F822C41127900FDD783 /* CategoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewModel.swift; sourceTree = "<group>"; };
+		CE120F842C44B62200FDD783 /* CategoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 			children = (
 				CE120F5A2C40F5A800FDD783 /* WelcomeViewController.swift */,
 				CE120F7C2C41047E00FDD783 /* CategoriesViewController.swift */,
+				CE120F842C44B62200FDD783 /* CategoryDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				CE120F722C40F6C800FDD783 /* Router.swift in Sources */,
 				CE120F7D2C41047E00FDD783 /* CategoriesViewController.swift in Sources */,
 				CE120F812C41083E00FDD783 /* CategoriesView.swift in Sources */,
+				CE120F852C44B62200FDD783 /* CategoryDetailViewController.swift in Sources */,
 				CE120F592C40F5A800FDD783 /* SceneDelegate.swift in Sources */,
 				CE120F832C41127900FDD783 /* CategoriesViewModel.swift in Sources */,
 			);

@@ -21,4 +21,18 @@ struct CategoriesViewModel {
         .init(title: "Meat & Fish", image: Images.Category.meatFish, color: UIColor.Cards.meatFish, borderColor: UIColor.Cards.meatFish),
         .init(title: "Beverages", image: Images.Category.beverages, color: UIColor.Cards.beverage, borderColor: UIColor.Cards.beverage)
     ]
+    
+    private(set) var filteredCategoriesList: [CategoryCardModel] = []
+    
+    init() {
+        filteredCategoriesList = categoriesList
+    }
+    
+    mutating func filterCategories(with query: String) {
+        if query.isEmpty {
+            filteredCategoriesList = categoriesList
+        } else {
+            filteredCategoriesList = categoriesList.filter { $0.title.lowercased().contains(query.lowercased()) }
+        }
+    }
 }
