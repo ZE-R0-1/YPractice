@@ -36,22 +36,22 @@ class CryptoViewControllerViewModel {
 
     // 코인의 순위를 문자열로 반환
     var rankLabel: String {
-        return "Rank: \(self.coin.cmc_rank)"
+        return "Rank: \(self.coin.rank)"
     }
 
     // 코인의 가격을 문자열로 반환
     var priceLabel: String {
-        return "Price: $\(self.coin.quote.CAD.price) CAD"
+        return "Price: $\(self.coin.pricingData.CAD.price) CAD"
     }
 
     // 코인의 시가총액을 문자열로 반환
     var marketCapLabel: String {
-        return "Market Cap: $\(self.coin.quote.CAD.market_cap) CAD"
+        return "Market Cap: $\(self.coin.pricingData.CAD.market_cap) CAD"
     }
 
     // 코인의 최대 공급량을 문자열로 반환
     var maxSupplyLabel: String {
-        if let maxSupply = self.coin.max_supply {
+        if let maxSupply = self.coin.maxSupply {
             return "Max Supply: \(maxSupply)"
         } else {
             // 최대 공급량이 없는 경우, 테스트를 위해 긴 문자열 반환

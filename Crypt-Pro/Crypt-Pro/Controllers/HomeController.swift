@@ -8,9 +8,16 @@
 import UIKit
 
 class HomeController: UIViewController {
-
+    
     // MARK: - variables
-    private let coins: [Coin] = Coin.getMockArray()
+    private let coins: [Coin] = [
+        // Bitcoin에 대한 Coin 인스턴스 생성 및 배열에 추가
+        Coin(id: 1, name: "Bitcoin", maxSupply: 200, rank: 1, pricingData: PricingData(CAD: CAD(price: 50000, market_cap: 1_000_000))),
+        // Ethereum에 대한 Coin 인스턴스 생성 및 배열에 추가
+        Coin(id: 2, name: "Ethereum", maxSupply: nil, rank: 2, pricingData: PricingData(CAD: CAD(price: 2000, market_cap: 500_000))),
+        // Monero에 대한 Coin 인스턴스 생성 및 배열에 추가
+        Coin(id: 3, name: "Monero", maxSupply: nil, rank: 3, pricingData: PricingData(CAD: CAD(price: 200, market_cap: 250_000)))
+    ]
     
     // MARK: - UI Components
     private let tableView: UITableView = {
