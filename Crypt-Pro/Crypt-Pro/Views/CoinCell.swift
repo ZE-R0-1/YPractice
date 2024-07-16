@@ -47,14 +47,22 @@ class CoinCell: UITableViewCell {
         
         self.coinName.text = coin.name // 코인 이름을 레이블에 설정
         
-        // 코인 로고 URL로부터 데이터를 가져옴
-        let imageData = try? Data(contentsOf: self.coin.logoURL!)
-        if let imageData { // 데이터가 유효하면
-            // 메인 스레드에서 이미지 뷰에 이미지 설정
-            DispatchQueue.main.async { [weak self] in
-                self?.coinLogo.image = UIImage(data: imageData)
+        DispatchQueue.global().async {
+            // 코인 로고 URL로부터 데이터를 가져옴
+            let imageData = try? Data(contentsOf: self.coin.logoURL!)
+            if let imageData { // 데이터가 유효하면
+                // 메인 스레드에서 이미지 뷰에 이미지 설정
+                DispatchQueue.main.async { [weak self] in
+                    self?.coinLogo.image = UIImage(data: imageData)
+                }
             }
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.coinName.text = nil
+        self.coinLogo.image = nil
     }
 
     // UI 요소를 설정하는 메서드
