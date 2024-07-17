@@ -7,43 +7,49 @@
 
 import Foundation
 
-// HomeController의 ViewModel을 정의하는 클래스
+import UIKit
+
 class HomeControllerViewModel {
     
-    // 코인이 업데이트되었을 때 호출되는 클로저
+    // MARK: - Callbacks
+    // 코인 데이터가 업데이트되었을 때 호출될 클로저
     var onCoinsUpdated: (()->Void)?
-    // 에러 메시지가 발생했을 때 호출되는 클로저
+    // 에러 메시지가 발생했을 때 호출될 클로저
     var onErrorMessage: ((CoinServiceError)->Void)?
     
-    // 코인의 배열을 저장하는 프로퍼티. 값이 변경되면 onCoinsUpdated 클로저가 호출됨
+    // MARK: - Variables
+    // 코인 데이터를 저장하는 변수, 데이터가 변경될 때마다 `onCoinsUpdated` 클로저 호출
     private(set) var coins: [Coin] = [] {
         didSet {
-            self.onCoinsUpdated?()
+            self.onCoinsUpdated?() // 코인 데이터가 변경되었으므로 UI 업데이트 필요
         }
     }
     
-    // 초기화 메서드, 생성 시 코인 데이터를 가져옴
+    // MARK: - Initializer
+    // 초기화 메소드, 코인 데이터를 가져오는 메소드 호출
     init() {
         self.fetchCoins()
+        
+        // 테스트 코드 주석
+        // self.coins.insert(Coin(id: <#T##Int#>, name: <#T##String#>, maxSupply: <#T##Int?#>, rank: <#T##Int#>, pricingData: <#T##PricingData#>, logoURL: <#T##URL?#>), at: <#T##Int#>)
     }
     
-    // 코인 데이터를 가져오는 메서드
+    // MARK: - Data Fetching
+    // 코인 데이터를 서버에서 가져오는 메소드
     public func fetchCoins() {
-        // 코인 데이터를 가져오기 위한 엔드포인트 생성
+        // `Endpoint.fetchCoins`를 사용해 코인 데이터를 가져오는 요청 생성
         let endpoint = Endpoint.fetchCoins()
         
-        // CoinService를 통해 코인 데이터를 가져옴
+        // `CoinService`를 사용해 코인 데이터를 비동기적으로 가져옴
         CoinService.fetchCoins(with: endpoint) { [weak self] result in
-            // 결과에 따라 처리
             switch result {
             case .success(let coins):
-                // 성공적으로 코인을 가져오면 coins 프로퍼티를 업데이트
+                // 성공적으로 코인 데이터를 가져온 경우
                 self?.coins = coins
-                // 디버그용 출력
-                print("DEBUG PRINT:", "\(coins.count) coins fetched.")
+                print("DEBUG PRINT:", "\(coins.count) coins fetched.") // 디버깅용 출력
                 
             case .failure(let error):
-                // 에러가 발생하면 onErrorMessage 클로저를 호출하여 에러 메시지 전달
+                // 에러가 발생한 경우, 에러 메시지를 전달
                 self?.onErrorMessage?(error)
             }
         }

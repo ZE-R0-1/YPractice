@@ -7,22 +7,25 @@
 
 import Foundation
 
+// 서버 응답에서 코인 배열을 디코딩하기 위한 구조체
 struct CoinArray: Decodable {
     let data: [Coin]
 }
 
-struct Coin: Decodable {
-    let id: Int // 코인의 고유 식별자를 나타내는 정수형 프로퍼티
-    let name: String // 코인의 이름을 나타내는 문자열형 프로퍼티
-    let maxSupply: Int? // 코인의 최대 공급량을 나타내는 정수형 프로퍼티, nil일 수 있음
-    let rank: Int // 코인의 CoinMarketCap 순위를 나타내는 정수형 프로퍼티
-    let pricingData: PricingData
-
-    // 코인의 로고 URL을 반환하는 계산형 프로퍼티, URL 객체를 옵셔널로 반환
+// 개별 코인 데이터를 나타내는 구조체
+struct Coin: Codable {
+    let id: Int             // 코인의 고유 ID
+    let name: String        // 코인의 이름
+    let maxSupply: Int?     // 최대 공급량, 선택적 속성
+    let rank: Int           // 코인의 순위
+    let pricingData: PricingData  // 가격 데이터를 포함하는 속성
+    
+    // 코인의 로고 URL을 생성하는 계산 속성
     var logoURL: URL? {
         return URL(string: "https://s2.coinmarketcap.com/static/img/coins/200x200/\(id).png")
     }
     
+    // JSON 키와 매핑하기 위한 열거형
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
@@ -32,13 +35,13 @@ struct Coin: Decodable {
     }
 }
 
-// Quote 구조체 정의
-struct PricingData: Decodable {
-    let CAD: CAD // CAD 통화에 대한 가격 정보를 담고 있는 CAD 구조체 인스턴스를 나타내는 프로퍼티
+// 코인의 가격 데이터를 나타내는 구조체
+struct PricingData: Codable {
+    let CAD: CAD  // 캐나다 달러(CAD)로 표현된 가격 데이터
 }
 
-// CAD 구조체 정의
-struct CAD: Decodable {
-    let price: Double // 코인의 가격을 나타내는 실수형 프로퍼티
-    let market_cap: Double // 코인의 시가총액을 나타내는 실수형 프로퍼티
+// 캐나다 달러(CAD)로 표현된 가격 데이터를 나타내는 구조체
+struct CAD: Codable {
+    let price: Double       // 코인의 가격
+    let market_cap: Double  // 코인의 시가 총액
 }

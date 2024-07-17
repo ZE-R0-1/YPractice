@@ -7,29 +7,33 @@
 
 import Foundation
 
-// HTTP 관련 열거형을 정의하는 최상위 enum
+// 네임스페이스 역할을 하는 HTTP 열거형(enum)
 enum HTTP {
-    // HTTP 메서드를 정의하는 중첩된 enum
+    
+    // HTTP 메소드를 나타내는 열거형, 문자열 타입을 준수
     enum Method: String {
-        // GET 메서드, 문자열 "GET"과 연결
+        // GET 메소드
         case get = "GET"
-        // POST 메서드, 문자열 "POST"과 연결
+        // POST 메소드
         case post = "POST"
     }
     
-    // HTTP 헤더를 정의하는 중첩된 enum
+    // HTTP 헤더를 나타내는 열거형
     enum Headers {
-        // HTTP 헤더 키를 정의하는 중첩된 enum
+        
+        // HTTP 헤더 키를 나타내는 열거형, 문자열 타입을 준수
         enum Key: String {
-            // Content-Type 헤더 키, 문자열 "Content-Type"과 연결
+            // Content-Type 헤더 키
             case contentType = "Content-Type"
-            // API 키 헤더 키, 문자열 "X-CMC_PRO_API_KEY"와 연결
+            // API 키 헤더
             case apiKey = "X-CMC_PRO_API_KEY"
         }
-        // HTTP 헤더 값을 정의하는 중첩된 enum
+        
+        // HTTP 헤더 값을 나타내는 열거형, 문자열 타입을 준수
         enum Value: String {
-            // Content-Type 헤더 값, 문자열 "application/json"과 연결
+            // application/json 값
             case applicationJson = "application/json"
         }
     }
 }
+
