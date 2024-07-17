@@ -9,9 +9,6 @@ import UIKit
 
 class ViewCryptoControllerViewModel {
     
-    // 이미지가 로드되었을 때 호출될 클로저
-    var onImageLoaded: ((UIImage?) -> Void)?
-    
     // MARK: - Variables
     // 코인 데이터를 저장하는 변수
     let coin: Coin
@@ -20,18 +17,6 @@ class ViewCryptoControllerViewModel {
     // 초기화 메소드, 코인 데이터를 설정하고 이미지를 로드함
     init(_ coin: Coin) {
         self.coin = coin
-        self.loadImage()
-    }
-    
-    // 이미지를 비동기적으로 로드하는 메소드
-    private func loadImage() {
-        DispatchQueue.global().async { [weak self] in
-            if let logoURL = self?.coin.logoURL,
-               let imageData = try? Data(contentsOf: logoURL),
-               let logoImage = UIImage(data: imageData) {
-                self?.onImageLoaded?(logoImage)
-            }
-        }
     }
     
     // MARK: - Computed Properties

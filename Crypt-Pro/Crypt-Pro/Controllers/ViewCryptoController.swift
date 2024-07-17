@@ -117,12 +117,7 @@ class ViewCryptoController: UIViewController {
         self.marketCapLabel.text = self.viewModel.marketCapLabel
         self.maxSupplyLabel.text = self.viewModel.maxSupplyLabel
         
-        // ViewModel의 `onImageLoaded` 클로저 설정: 로고 이미지가 로드되면 이미지 뷰에 설정
-        self.viewModel.onImageLoaded = { [weak self] logoImage in
-            DispatchQueue.main.async {
-                self?.coinLogo.image = logoImage
-            }
-        }
+        self.coinLogo.sd_setImage(with: self.viewModel.coin.logoURL)
     }
     
     // MARK: - UI Setup

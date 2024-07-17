@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -26,5 +27,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // window 변수를 초기화하고 윈도우를 보이도록 설정
         self.window = window
         self.window?.makeKeyAndVisible()
+        
+        print("DEBUG PRINT:", SDImageCache.shared.diskCache.totalSize())
+        
+        SDImageCache.shared.config.maxDiskSize = 1000000 * 20
     }
 }

@@ -6,8 +6,8 @@
 //
 
 import UIKit
+import SDWebImage
 
-import UIKit
 
 class CoinCell: UITableViewCell {
     
@@ -56,19 +56,8 @@ class CoinCell: UITableViewCell {
         
         // 코인 이름을 설정
         self.coinName.text = coin.name
-
-        // 코인 로고를 비동기적으로 로드
-        DispatchQueue.global().async { [weak self] in
-            if let logoURL = coin.logoURL,
-               let imageData = try? Data(contentsOf: logoURL),
-               let logoImage = UIImage(data: imageData) {
-                
-                // 메인 스레드에서 UI 업데이트
-                DispatchQueue.main.async {
-                    self?.coinLogo.image = logoImage
-                }
-            }
-        }
+        self.coinLogo.sd_setImage(with: coin.logoURL)
+        
     }
     
     // 셀이 재사용될 때 호출되는 메소드, 초기 상태로 되돌림
