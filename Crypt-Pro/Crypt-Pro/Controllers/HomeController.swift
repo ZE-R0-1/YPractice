@@ -10,49 +10,43 @@ import UIKit
 class HomeController: UIViewController {
     
     // MARK: - Variables
-    // `HomeControllerViewModel`의 인스턴스, 코인 데이터와 관련된 로직을 처리
-    private let viewModel: HomeControllerViewModel
+    private let viewModel: HomeControllerViewModel  // 뷰 모델 변수
     
     // MARK: - UI Components
-    // UITableView를 설정하고 등록하는 코드
-    private let tableView: UITableView = {
+    private let searchController = UISearchController(searchResultsController: nil)  // 검색 컨트롤러
+    
+    private let tableView: UITableView = {  // 테이블 뷰 설정
         let tv = UITableView()
         tv.backgroundColor = .systemBackground
-        // `CoinCell`을 재사용 셀로 등록
-        tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)
+        tv.register(CoinCell.self, forCellReuseIdentifier: CoinCell.identifier)  // 테이블 뷰 셀 등록
         return tv
     }()
     
     // MARK: - LifeCycle
-    // 초기화 메소드, ViewModel을 주입받아 초기화
     init(_ viewModel: HomeControllerViewModel = HomeControllerViewModel()) {
-        self.viewModel = viewModel
+        self.viewModel = viewModel  // 뷰 모델 초기화
         super.init(nibName: nil, bundle: nil)
     }
     
-    // NSCoder를 통한 초기화는 사용하지 않음
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // 뷰가 로드될 때 호출되는 메소드
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupUI()
+        self.setupSearchController()  // 검색 컨트롤러 설정
+        self.setupUI()  // UI 설정
         
-        // UITableView의 delegate와 dataSource를 설정
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        self.tableView.delegate = self  // 테이블 뷰 델리게이트 설정
+        self.tableView.dataSource = self  // 테이블 뷰 데이터 소스 설정
         
-        // ViewModel의 `onCoinsUpdated` 클로저 설정: 코인 데이터가 업데이트되면 테이블 뷰를 갱신
-        self.viewModel.onCoinsUpdated = { [weak self] in
+        self.viewModel.onCoinsUpdated = { [weak self] in  // 코인 데이터 업데이트 콜백 설정
             DispatchQueue.main.async {
-                self?.tableView.reloadData()
+                self?.tableView.reloadData()  // 테이블 뷰 리로드
             }
         }
         
-        // ViewModel의 `onErrorMessage` 클로저 설정: 에러 발생 시 알림을 표시
-        self.viewModel.onErrorMessage = { [weak self] error in
+        self.viewModel.onErrorMessage = { [weak self] error in  // 에러 메시지 콜백 설정
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
@@ -69,26 +63,20 @@ class HomeController: UIViewController {
                     alert.message = string
                 }
                 
-                // 생성한 알림을 화면에 표시
                 self?.present(alert, animated: true, completion: nil)
             }
         }
     }
 
     // MARK: - UI Setup
-    // UI 요소를 설정하는 메소드
-    private func setupUI() {
-        // 내비게이션 바의 제목 설정
-        self.navigationItem.title = "CryptPro"
-        // 뷰의 배경색 설정
-        self.view.backgroundColor = .systemBackground
+    private func setupUI() {  // UI 설정 함수
+        self.navigationItem.title = "iCryyptPro"  // 네비게이션 타이틀 설정
+        self.view.backgroundColor = .systemBackground  // 배경색 설정
         
-        // 테이블 뷰를 현재 뷰에 추가
-        self.view.addSubview(tableView)
+        self.view.addSubview(tableView)  // 테이블 뷰 추가
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        // 오토레이아웃 제약 조건 설정
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate([  // 오토레이아웃 설정
             self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -96,47 +84,68 @@ class HomeController: UIViewController {
         ])
     }
     
-    // MARK: - Selectors
-    // 셀 선택 시 호출될 메소드들은 UITableViewDelegate 및 UITableViewDataSource extension에 구현
+    private func setupSearchController() {  // 검색 컨트롤러 설정 함수
+        self.searchController.searchResultsUpdater = self
+        self.searchController.obscuresBackgroundDuringPresentation = false
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.searchBar.placeholder = "Search Cryptos"
+        
+        self.navigationItem.searchController = searchController  // 네비게이션 아이템에 검색 컨트롤러 추가
+        self.definesPresentationContext = false
+        self.navigationItem.hidesSearchBarWhenScrolling = false
+        
+        searchController.delegate = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.showsBookmarkButton = true  // 북마크 버튼 표시
+        searchController.searchBar.setImage(UIImage(systemName: "line.horizontal.3.decrease"), for: .bookmark, state: .normal)
+    }
+}
+
+// MARK: - Search Controller Functions
+extension HomeController: UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate  {
+    
+    func updateSearchResults(for searchController: UISearchController) {  // 검색 결과 업데이트 함수
+        self.viewModel.updateSearchController(searchBarText: searchController.searchBar.text)
+    }
+    
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {  // 북마크 버튼 클릭 함수
+        print("Search bar button called!")
+    }
 }
 
 // MARK: - TableView Functions
-// UITableView의 delegate와 dataSource를 구현하는 확장
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
-    // 테이블 뷰의 섹션에 있는 행의 수를 반환하는 메소드
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.coins.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {  // 섹션당 행의 개수 설정
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        return inSearchMode ? self.viewModel.filteredCoins.count : self.viewModel.allCoins.count
     }
     
-    // 테이블 뷰의 각 행에 표시될 셀을 반환하는 메소드
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {  // 셀 구성 함수
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CoinCell.identifier, for: indexPath) as? CoinCell else {
             fatalError("Unable to dequeue CoinCell in HomeController")
         }
         
-        // ViewModel에서 코인 데이터 가져오기
-        let coin = self.viewModel.coins[indexPath.row]
-        // 셀을 코인 데이터로 구성
-        cell.configure(with: coin)
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        
+        let coin = inSearchMode ? self.viewModel.filteredCoins[indexPath.row] : self.viewModel.allCoins[indexPath.row]
+        cell.configure(with: coin)  // 셀에 코인 데이터 설정
         return cell
     }
     
-    // 각 행의 높이를 설정하는 메소드
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 88  // 각 셀의 높이를 88로 설정
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {  // 행 높이 설정
+        return 88
     }
     
-    // 셀을 선택했을 때 호출되는 메소드
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 선택한 셀의 선택 상태 해제
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {  // 셀 선택 시 호출
         self.tableView.deselectRow(at: indexPath, animated: true)
         
-        // 선택한 코인 데이터를 가져와 ViewModel과 ViewController를 생성
-        let coin = self.viewModel.coins[indexPath.row]
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        
+        let coin = inSearchMode ? self.viewModel.filteredCoins[indexPath.row] : self.viewModel.allCoins[indexPath.row]
+        
         let vm = ViewCryptoControllerViewModel(coin)
         let vc = ViewCryptoController(vm)
-        // 새로운 뷰 컨트롤러를 네비게이션 스택에 추가
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(vc, animated: true)  // 상세 정보 화면으로 이동
     }
 }
